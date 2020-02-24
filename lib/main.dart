@@ -28,7 +28,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  static const platform = const MethodChannel('com.novugrid.flutter_marker_animation');
+
+  static const platform = const MethodChannel(
+      'com.novugrid.flutter_marker_animation');
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +41,6 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
 
           // horizontal).
@@ -49,20 +49,30 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               'You have pushed the button this many times:',
             ),
+
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+
+            RaisedButton(
+              onPressed: _openMap,
+              child: Text("Open Map Activity"),
+            )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          platform.invokeMethod('openMap');
+
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
+  }
+
+  void _openMap() {
+    platform.invokeMethod('openMap');
   }
 }

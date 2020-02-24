@@ -9,12 +9,17 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.novugrid.flutter_marker_animation"
-    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+    override fun configureFlutterEngine(@NonNull flutterEngine:
+                                        FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine);
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
+                CHANNEL).setMethodCallHandler {
             call, result ->
+            // open map is the method name that would
+            // be passed from flutter to trigger the maps activity
             if (call.method.equals("openMap")) {
-                var intent = Intent(this, MapsActivity::class.java)
+                var intent = Intent(this,
+                        MapsActivity::class.java)
                 startActivity(intent)
             }
         }

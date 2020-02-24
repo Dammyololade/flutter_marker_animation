@@ -26,12 +26,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var handler: Handler
     private lateinit var lagos: LatLng
     private var index = 0
-    private  var next:Int = 0
+    private var next: Int = 0
     private var v = 0f
     private var lat = 0.0
-    private  var lng = 0.0
+    private var lng = 0.0
     private lateinit var startPosition: LatLng
-    private lateinit var endPosition:LatLng
+    private lateinit var endPosition: LatLng
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,7 +95,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 result = result or (b and 0x1f shl shift)
                 shift += 5
             } while (b >= 0x20)
-            val dlat = if (result and 1 != 0) (result shr 1).inv() else result shr 1
+            val dlat = if (result and 1 != 0)
+                (result shr 1).inv() else result shr 1
             lat += dlat
 
             shift = 0
@@ -105,7 +106,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 result = result or (b and 0x1f shl shift)
                 shift += 5
             } while (b >= 0x20)
-            val dlng = if (result and 1 != 0) (result shr 1).inv() else result shr 1
+            val dlng = if (result and 1 != 0)
+                (result shr 1).inv() else result shr 1
             lng += dlng
 
             val p = LatLng(
@@ -121,14 +123,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getBearingAngle(begin: LatLng, end: LatLng): Float {
         val lat = Math.abs(begin.latitude - end.latitude)
         val lng = Math.abs(begin.longitude - end.longitude)
-        if (begin.latitude < end.latitude && begin.longitude < end.longitude)
+        if (begin.latitude < end.latitude
+                && begin.longitude < end.longitude)
             return Math.toDegrees(Math.atan(lng / lat)).toFloat()
-        else if (begin.latitude >= end.latitude && begin.longitude < end.longitude)
-            return (90 - Math.toDegrees(Math.atan(lng / lat)) + 90).toFloat()
-        else if (begin.latitude >= end.latitude && begin.longitude >= end.longitude)
-            return (Math.toDegrees(Math.atan(lng / lat)) + 180).toFloat()
-        else if (begin.latitude < end.latitude && begin.longitude >= end.longitude)
-            return (90 - Math.toDegrees(Math.atan(lng / lat)) + 270).toFloat()
+        else if (begin.latitude >= end.latitude
+                && begin.longitude < end.longitude)
+            return (90 - Math.toDegrees(Math.atan(lng
+                    / lat)) + 90).toFloat()
+        else if (begin.latitude >= end.latitude
+                && begin.longitude >= end.longitude)
+            return (Math.toDegrees(Math.atan(lng
+                    / lat)) + 180).toFloat()
+        else if (begin.latitude < end.latitude
+                && begin.longitude >= end.longitude)
+            return (90 - Math.toDegrees(Math.atan(lng
+                    / lat)) + 270).toFloat()
         return (-1).toFloat()
     }
 
@@ -139,8 +148,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             builder.include(latLng)
         }
         val bounds = builder.build()
-        if(bounds.contains(lagos)) {
-            val mCameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 2)
+        if (bounds.contains(lagos)) {
+            val mCameraUpdate =
+                    CameraUpdateFactory.newLatLngBounds(bounds, 2)
             mMap.animateCamera(mCameraUpdate)
         }
 
@@ -168,7 +178,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun animateMarker() {
-        val polylineAnimator = ValueAnimator.ofInt(0, 100)
+        val polylineAnimator =
+                ValueAnimator.ofInt(0, 100)
         polylineAnimator.duration = 2000
         polylineAnimator.interpolator = LinearInterpolator()
         polylineAnimator.addUpdateListener { valueAnimator ->
@@ -182,11 +193,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         polylineAnimator.start()
         marker = mMap.addMarker(MarkerOptions().position(lagos)
                 .flat(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car)))
+                .icon(BitmapDescriptorFactory
+                        .fromResource(R.drawable.ic_car)))
         handler = Handler()
         index = -1
         next = 1
-        handler.postDelayed(object: Runnable {
+        handler.postDelayed(object : Runnable {
 
             override fun run() {
                 if (index < polyLineList.size - 1) {
@@ -197,21 +209,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     startPosition = polyLineList[index]
                     endPosition = polyLineList[next]
                 }
-//            startPosition = lagos
-//            endPosition = LatLng(6.595680, 3.337030)
-                val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
+                val valueAnimator =
+                        ValueAnimator.ofFloat(0f, 1f)
                 valueAnimator.duration = 3000
                 valueAnimator.interpolator = LinearInterpolator()
                 valueAnimator.addUpdateListener {
                     v = it.animatedFraction
-                    lng = v * endPosition.longitude + (1 - v) * startPosition.longitude
-                    lat = v * endPosition.latitude + (1 - v) * startPosition.latitude
+                    lng = v * endPosition.longitude + (1 - v) *
+                            startPosition.longitude
+                    lat = v * endPosition.latitude + (1 - v) *
+                            startPosition.latitude
                     val newPos = LatLng(lat, lng)
                     marker.position = newPos
                     marker.setAnchor(0.5f, 0.5f)
-                    marker.rotation = getBearingAngle(startPosition, newPos)
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.Builder().target(newPos)
-                            .zoom(12.5f).build()))
+                    marker.rotation =
+                            getBearingAngle(startPosition, newPos)
+                    mMap.animateCamera(CameraUpdateFactory
+                            .newCameraPosition(CameraPosition
+                                    .Builder().target(newPos)
+                                    .zoom(12.5f).build()))
                 }
                 valueAnimator.start()
                 if (index != polyLineList.size - 1) {
